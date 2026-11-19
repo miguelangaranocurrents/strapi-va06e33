@@ -752,7 +752,10 @@ const RelationModalWithContext = ({
 
   React.useLayoutEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    // The typed text is cleared after a selection, so the stale search must be cleared as well,
+    // otherwise reopening the dropdown would list results for the old search term.
+    setSearchParams((s) => (s._q === '' && s.page === 1 ? s : { _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
